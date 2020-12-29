@@ -2,6 +2,7 @@ name: Sync To Gitee
 on: push
 jobs:
   sync:
+    if: github.repository == 'git9527/freecloud-admin'
     runs-on: ubuntu-latest
     steps:
       - uses: wearerequired/git-mirror-action@master
