@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1690091",
+      "name": "重命名",
+      "font_class": "rename",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "2172745",
+      "name": "网站",
+      "font_class": "sites",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
       "icon_id": "11032109",
       "name": "系统管理",
       "font_class": "system-manage",
@@ -36,7 +50,7 @@
     {
       "icon_id": "14963680",
       "name": "用户管理",
-      "font_class": "yonghuguanli",
+      "font_class": "user-manage",
       "unicode": "e690",
       "unicode_decimal": 59024
     },

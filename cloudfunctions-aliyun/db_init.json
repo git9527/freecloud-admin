@@ -59,7 +59,7 @@
             {
                 "menu_id": "site_management",
                 "name": "站点管理",
-                "icon": "",
+                "icon": "icon-sites-manage",
                 "url": "/pages/netdisk/site/list",
                 "sort": 1050,
                 "parent_id": "system_management",
