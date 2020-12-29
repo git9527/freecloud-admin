@@ -1,0 +1,578 @@
+{
+    "opendb-admin-menus": {
+        "data": [
+             {
+                "create_date": 1602662469396,
+                "enable": true,
+                "icon": "icon-system-manage",
+                "menu_id": "system_management",
+                "name": "系统管理",
+                "parent_id": "",
+                "permission": [],
+                "sort": 1000,
+                "url": ""
+            },
+            {
+                "create_date": 1602662469398,
+                "enable": true,
+                "icon": "icon-user-manage",
+                "menu_id": "system_user",
+                "name": "用户管理",
+                "parent_id": "system_management",
+                "permission": [],
+                "sort": 1010,
+                "url": "/pages/system/user/list"
+            },
+             {
+                "create_date": 1602662469397,
+                "enable": true,
+                "icon": "icon-role-manage",
+                "menu_id": "system_role",
+                "name": "角色管理",
+                "parent_id": "system_management",
+                "permission": [],
+                "sort": 1020,
+                "url": "/pages/system/role/list"
+            },
+            {
+                "create_date": 1602662469396,
+                "enable": true,
+                "icon": "icon-permission-manage",
+                "menu_id": "system_permission",
+                "name": "权限管理",
+                "parent_id": "system_management",
+                "permission": [],
+                "sort": 1030,
+                "url": "/pages/system/permission/list"
+            },
+            {
+                "create_date": 1602662469396,
+                "enable": true,
+                "icon": "icon-menu-manage",
+                "menu_id": "system_menu",
+                "name": "菜单管理",
+                "parent_id": "system_management",
+                "permission": [],
+                "sort": 1040,
+                "url": "/pages/system/menu/list"
+            },
+            {
+                "menu_id": "site_management",
+                "name": "站点管理",
+                "icon": "",
+                "url": "/pages/netdisk/site/list",
+                "sort": 1050,
+                "parent_id": "system_management",
+                "permission": [],
+                "enable": true
+            },
+            {
+                "menu_id": "2000",
+                "name": "我的网盘",
+                "icon": "icon-netdisk",
+                "url": "",
+                "parent_id": "",
+                "permission": [
+                    "disk_user"
+                ],
+                "enable": true,
+                "sort": 2000
+            },
+            {
+                "menu_id": "2001",
+                "name": "文件管理",
+                "icon": "icon-file-manage",
+                "url": "/pages/netdisk/list",
+                "sort": 2001,
+                "parent_id": "2000",
+                "permission": [
+                    "disk_user"
+                ],
+                "enable": true
+            },
+            {
+                "menu_id": "2002",
+                "name": "操作日志",
+                "icon": "icon-operation-logs",
+                "url": "/pages/netdisk/logs",
+                "sort": 2002,
+                "parent_id": "2000",
+                "permission": [
+                    "disk_user"
+                ],
+                "enable": true
+            }
+        ]
+    },
+    "opendb-netdisk-sites": {
+        "data": [
+            {
+                "_id": "default-root-site",
+                "htmlTitle": "高速网盘",
+                "siteHeader": "FAST",
+                "cnzzId": "33",
+                "fileRootId": "default-root-folder",
+                "createOn": 1608366327772,
+                "siteOrigin": "http://localhost:20000"
+            },
+            {
+                "_id": "default-test-site",
+                "htmlTitle": "高速网盘",
+                "siteHeader": "FAST",
+                "cnzzId": "33",
+                "fileRootId": "test-file-root",
+                "createOn": 1608366327772,
+                "siteOrigin": "http://127.0.0.1:20000"
+            }
+        ],
+        "schema": {
+            "bsonType": "object",
+            "required": [],
+            "permission": {
+                "read": true,
+                "create": "'disk_user' in auth.permission",
+                "update": "'disk_user' in auth.permission",
+                "delete": "'disk_user' in auth.permission"
+            },
+            "properties": {
+                "_id": {
+                    "description": "ID，系统自动生成"
+                },
+                "htmlTitle": {
+                    "type": "string"
+                },
+                "siteHeader": {
+                    "type": "string"
+                },
+                "siteOrigin": {
+                    "type": "string"
+                },
+                "cnzzId": {
+                    "type": "string"
+                },
+                "fileRootId": {
+                    "type": "string"
+                },
+                "createOn": {
+                    "bsonType": "timestamp",
+                    "description": "创建时间",
+                    "forceDefaultValue": {
+                        "$env": "now"
+                    }
+                }
+            }
+        }
+    },
+    "opendb-netdisk-files": {
+        "data": [
+            {
+                "_id": "default-root-folder",
+                "name": "",
+                "isFolder": true,
+                "createBy": "system"
+            },
+            {
+                "_id": "test-file-root",
+                "name": "test",
+                "isFolder": true,
+                "createBy": "system",
+                "parent": "default-root-folder"
+            }
+        ],
+        "schema": {
+            "bsonType": "object",
+            "required": [],
+            "permission": {
+                "read": true,
+                "create": "'disk_user' in auth.permission",
+                "update": "'disk_user' in auth.permission",
+                "delete": "'disk_user' in auth.permission"
+            },
+            "properties": {
+                "_id": {
+                    "description": "ID，系统自动生成"
+                },
+                "parent": {
+                    "bsonType": "String",
+                    "description": "所在目录"
+                },
+                "name": {
+                    "bsonType": "String",
+                    "description": "名称"
+                },
+                "isFolder": {
+                    "bsonType": "Bool",
+                    "description": "是否文件夹"
+                },
+                "size": {
+                    "bsonType": "number"
+                },
+                "link": {
+                    "bsonType": "string"
+                },
+                "createBy": {
+                    "bsonType": "string"
+                },
+                "fileType": {
+                    "bsonType": "string"
+                },
+                "createOn": {
+                    "bsonType": "timestamp",
+                    "description": "创建时间",
+                    "forceDefaultValue": {
+                        "$env": "now"
+                    }
+                }
+            }
+        }
+    },
+    "opendb-netdisk-logs": {
+        "schema": {
+            "bsonType": "object",
+            "required": [],
+            "permission": {
+                "read": true,
+                "create": "'disk_user' in auth.permission",
+                "update": "'disk_user' in auth.permission",
+                "delete": "'disk_user' in auth.permission"
+            },
+            "properties": {
+                "_id": {
+                    "description": "ID，系统自动生成"
+                },
+                "actionOn": {
+                    "bsonType": "timestamp",
+                    "description": "创建时间",
+                    "forceDefaultValue": {
+                        "$env": "now"
+                    }
+                },
+                "actionBy": {
+                    "bsonType": "string"
+                },
+                "actionDetail": {
+                    "bsonType": "object"
+                },
+                "actionType": {
+                    "bsonType": "string"
+                }
+            }
+        }
+    },
+    "opendb-verify-codes": {
+        "data": []
+    },
+    "uni-id-permissions": {
+        "data": [
+            {
+                "permission_id": "disk_user",
+                "permission_name": "disk_user",
+                "comment": "disk user",
+                "create_date": 1607591990524
+            }
+        ]
+    },
+    "uni-id-roles": {
+        "data": [
+            {
+                "role_id": "USER",
+                "role_name": "user",
+                "permission": [
+                    "disk_user"
+                ],
+                "comment": "普通用户",
+                "create_date": 1607245198574
+            }
+        ]
+    },
+    "uni-id-users": {
+        "data": [
+            {
+                "username": "admin",
+                "password": "b65eacf647e283b12f5288c9bd056653ce12c4bb",
+                "role": [
+                    "admin"
+                ],
+                "site": "default-root-site"
+            },
+            {
+                "username": "test",
+                "password": "eb02729bf02c66c5e38a7478f257aae5317fdd20",
+                "role": [
+                    "USER"
+                ],
+                "status": 0,
+                "site": "default-test-site"
+            }
+        ],
+        "schema": {
+          "bsonType": "object",
+          "required": [],
+          "properties": {
+            "_id": {
+              "description": "存储文档 ID（用户 ID），系统自动生成"
+            },
+            "username": {
+              "bsonType": "string",
+              "title": "用户名",
+              "description": "用户名，不允许重复",
+              "trim": "both"
+            },
+            "password": {
+              "bsonType": "password",
+              "title": "密码",
+              "description": "密码，加密存储",
+              "trim": "both"
+            },
+            "password_secret_version": {
+              "bsonType": "int",
+              "title": "passwordSecret",
+              "description": "密码使用的passwordSecret版本"
+            },
+            "nickname": {
+              "bsonType": "string",
+              "title": "昵称",
+              "description": "用户昵称",
+              "trim": "both"
+            },
+            "gender": {
+              "bsonType": "int",
+              "title": "性别",
+              "description": "用户性别：0 未知 1 男性 2 女性",
+              "defaultValue": 0,
+              "enum": [
+                {
+                  "text": "未知",
+                  "value": 0
+                },
+                {
+                  "text": "男",
+                  "value": 1
+                },
+                {
+                  "text": "女",
+                  "value": 2
+                }
+              ]
+            },
+            "status": {
+              "bsonType": "int",
+              "description": "用户状态：0 正常 1 禁用 2 审核中 3 审核拒绝",
+              "title": "用户状态",
+              "defaultValue": 0,
+              "enum": [
+                {
+                  "text": "正常",
+                  "value": 0
+                },
+                {
+                  "text": "禁用",
+                  "value": 1
+                },
+                {
+                  "text": "审核中",
+                  "value": 2
+                },
+                {
+                  "text": "审核拒绝",
+                  "value": 3
+                }
+              ]
+            },
+            "mobile": {
+              "bsonType": "string",
+              "title": "手机号码",
+              "description": "手机号码",
+              "pattern": "^\\+?[0-9-]{3,20}$",
+              "trim": "both"
+            },
+            "mobile_confirmed": {
+              "bsonType": "int",
+              "description": "手机号验证状态：0 未验证 1 已验证",
+              "title": "手机号验证状态",
+              "defaultValue": 0,
+              "enum": [
+                {
+                  "text": "未验证",
+                  "value": 0
+                },
+                {
+                  "text": "已验证",
+                  "value": 1
+                }
+              ]
+            },
+            "email": {
+              "bsonType": "string",
+              "format": "email",
+              "title": "邮箱",
+              "description": "邮箱地址",
+              "trim": "both"
+            },
+            "email_confirmed": {
+              "bsonType": "int",
+              "description": "邮箱验证状态：0 未验证 1 已验证",
+              "title": "邮箱验证状态",
+              "defaultValue": 0,
+              "enum": [
+                {
+                  "text": "未验证",
+                  "value": 0
+                },
+                {
+                  "text": "已验证",
+                  "value": 1
+                }
+              ]
+            },
+            "avatar": {
+              "bsonType": "string",
+              "title": "头像地址",
+              "description": "头像地址",
+              "trim": "both"
+            },
+            "role": {
+              "bsonType": "array",
+              "title": "角色",
+              "description": "用户角色",
+              "enum": {
+                "collection": "uni-id-roles",
+                "field": "role_id as value, role_name as text"
+              },
+              "foreignKey": "uni-id-roles.role_id",
+              "permission": {
+                "write": false
+              }
+            },
+            "wx_unionid": {
+              "bsonType": "string",
+              "description": "微信unionid"
+            },
+            "wx_openid": {
+              "bsonType": "object",
+              "description": "微信各个平台openid",
+              "properties": {
+                "app-plus": {
+                  "bsonType": "string",
+                  "description": "app平台微信openid"
+                },
+                "mp-weixin": {
+                  "bsonType": "string",
+                  "description": "微信小程序平台openid"
+                }
+              }
+            },
+            "ali_openid": {
+              "bsonType": "string",
+              "description": "支付宝平台openid"
+            },
+            "comment": {
+              "bsonType": "string",
+              "title": "备注",
+              "description": "备注",
+              "trim": "both"
+            },
+            "realname_auth": {
+              "bsonType": "object",
+              "description": "实名认证信息",
+              "required": [
+                "type",
+                "auth_status"
+              ],
+              "properties": {
+                "type": {
+                  "bsonType": "int",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "用户类型：0 个人用户 1 企业用户"
+                },
+                "auth_status": {
+                  "bsonType": "int",
+                  "minimum": 0,
+                  "maximum": 3,
+                  "description": "认证状态：0 未认证 1 等待认证 2 认证通过 3 认证失败"
+                },
+                "auth_date": {
+                  "bsonType": "timestamp",
+                  "description": "认证通过时间"
+                },
+                "real_name": {
+                  "bsonType": "string",
+                  "description": "真实姓名/企业名称"
+                },
+                "identity": {
+                  "bsonType": "string",
+                  "description": "身份证号码/营业执照号码"
+                },
+                "id_card_front": {
+                  "bsonType": "string",
+                  "description": "身份证正面照 URL"
+                },
+                "id_card_back": {
+                  "bsonType": "string",
+                  "description": "身份证反面照 URL"
+                },
+                "in_hand": {
+                  "bsonType": "string",
+                  "description": "手持身份证照片 URL"
+                },
+                "license": {
+                  "bsonType": "string",
+                  "description": "营业执照 URL"
+                },
+                "contact_person": {
+                  "bsonType": "string",
+                  "description": "联系人姓名"
+                },
+                "contact_mobile": {
+                  "bsonType": "string",
+                  "description": "联系人手机号码"
+                },
+                "contact_email": {
+                  "bsonType": "string",
+                  "description": "联系人邮箱"
+                }
+              }
+            },
+            "register_date": {
+              "bsonType": "timestamp",
+              "description": "注册时间",
+              "forceDefaultValue": {
+                "$env": "now"
+              }
+            },
+            "register_ip": {
+              "bsonType": "string",
+              "description": "注册时 IP 地址",
+              "forceDefaultValue": {
+                "$env": "clientIP"
+              }
+            },
+            "last_login_date": {
+              "bsonType": "timestamp",
+              "description": "最后登录时间"
+            },
+            "last_login_ip": {
+              "bsonType": "string",
+              "description": "最后登录时 IP 地址"
+            },
+            "token": {
+              "bsonType": "array",
+              "description": "用户token"
+            },
+            "inviter_uid": {
+              "bsonType": "array",
+              "description": "用户全部上级邀请者",
+              "trim": "both"
+            },
+            "my_invite_code": {
+              "bsonType": "string",
+              "description": "用户自身邀请码"
+            },
+            "site": {
+              "description": "所属站点"
+            }
+          }
+        }
+    }
+}
