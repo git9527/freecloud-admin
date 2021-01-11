@@ -177,6 +177,67 @@
                 "isFolder": true,
                 "createBy": "system",
                 "parent": "default-root-folder"
+            },
+            {
+                "_id": "test-doc-folder",
+                "name": "测试文档",
+                "isFolder": true,
+                "parent": "test-file-root",
+                "createBy": "system"
+            },
+            {
+                "name": "一年级第一学期第三单元重难点知识整理.doc",
+                "size": 2672640,
+                "link": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-vfejokrepkrj1a8e23/f02f5400-a237-4e3f-8261-15203b0b129d.doc",
+                "isFolder": false,
+                "fileType": "word",
+                "parent": "test-doc-folder",
+                "createBy": "system"
+            },
+            {
+                "name": "用户信息表.xlsx",
+                "size": 4196,
+                "link": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-vfejokrepkrj1a8e23/18bd411a-2dd7-44ed-8bbd-e34ff60ed856.xlsx",
+                "isFolder": false,
+                "fileType": "excel",
+                "parent": "test-doc-folder",
+                "createBy": "system"
+            },
+            {
+                "name": "sample.pptx",
+                "size": 74223,
+                "link": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-vfejokrepkrj1a8e23/5bd98d7e-fe5d-423a-8a96-96119e58853b.pptx",
+                "isFolder": false,
+                "fileType": "powerpoint",
+                "parent": "test-doc-folder",
+                "createBy": "system"
+            },
+            {
+                "name": "核心价值观.jpeg",
+                "size": 72278,
+                "link": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-vfejokrepkrj1a8e23/b0101b88-dca6-47f5-bdd7-fe6d8d0e7efb.jpeg",
+                "isFolder": false,
+                "fileType": "image",
+                "parent": "test-file-root",
+                "createBy": "system"
+            },
+            {
+                "name": "厦门六中合唱团原创单曲《简单的事》.mp4",
+                "size": 67656406,
+                "link": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-vfejokrepkrj1a8e23/6f7c728f-7407-47a9-83c8-afa86ac2f6d4.mp4",
+                "isFolder": false,
+                "fileType": "video",
+                "parent": "test-file-root",
+                "createBy": "system"
+            },
+            {
+                "name": "Bottle Opener！自動開瓶器，一次性開100瓶啤酒!【手工耿Handy Geng】.mp4",
+                "size": 30999625,
+                "link": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-vfejokrepkrj1a8e23/6ce5a9b5-6f2f-41af-8139-bde94202e059.mp4",
+                "isFolder": false,
+                "fileType": "video",
+                "parent": "test-file-root",
+                "createBy": "system"
             }
         ],
         "schema": {
