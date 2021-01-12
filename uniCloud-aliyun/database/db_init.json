@@ -238,6 +238,24 @@
                 "fileType": "video",
                 "parent": "test-file-root",
                 "createBy": "system"
+            },
+            {
+                "name": "G.E.M. 邓紫棋 - 光年之外.mp3",
+                "size": 9558662,
+                "link": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-vfejokrepkrj1a8e23/93b926a7-35a6-489e-a1e3-656389d18fb1.mp3",
+                "isFolder": false,
+                "fileType": "audio",
+                "parent": "test-file-root",
+                "createBy": "system"
+            },
+            {
+                "name": "intro the xx.flac",
+                "size": 11036015,
+                "link": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-vfejokrepkrj1a8e23/987d07ce-c738-4c6e-93cf-832552e7fb7d.flac",
+                "isFolder": false,
+                "fileType": "audio",
+                "parent": "test-file-root",
+                "createBy": "system"
             }
         ],
         "schema": {
