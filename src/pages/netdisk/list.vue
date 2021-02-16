@@ -420,27 +420,24 @@ export default {
           return
         }
       }
-      const uploadTaks = []
       for (const i in files) {
         const file = files[i]
-        // for file coming from uni.chooseFile, it already has path
         if (!file.path) {
           const filePath = await readUploadedFileAsUrl(file)
           file.path = filePath
+        } else {
+          // for file coming from uni.chooseFile, it already has path
+          console.debug('path already exist for file', file.name)
         }
-        const uploadTask = this.uploadApi(file, i, files.length)
-        uploadTaks.push(uploadTask)
+        await this.uploadApi(file, i, files.length)
       }
-      uploadTaks.reduce((cur, next) => cur.then(next)).then(() => {
-        uni.showToast({
-          title: files.length + '个文件上传成功'
-        })
+      uni.showToast({
+        title: files.length + '个文件上传成功'
       })
       document.getElementById('folderInput').value = null
     },
     async getParentIdFromRativePath (currentPathId, relativePath) {
       if (!relativePath.includes('/')) {
-        console.log('found parent', currentPathId)
         return new Promise(resolve => {
           resolve(currentPathId)
         })

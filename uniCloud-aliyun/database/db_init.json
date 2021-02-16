@@ -273,7 +273,8 @@
                 },
                 "parent": {
                     "bsonType": "String",
-                    "description": "所在目录"
+                    "description": "父id",
+                    "parentKey": "_id"
                 },
                 "name": {
                     "bsonType": "String",
