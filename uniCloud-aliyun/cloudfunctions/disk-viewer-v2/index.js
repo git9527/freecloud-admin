@@ -11,7 +11,9 @@ exports.main = async (event, context) => {
   const siteInfo = siteInfos[0]
   delete siteInfo.siteOrigin
   delete siteInfo._id
-  const currentFolderId = JSON.parse(event.body).currentFolderId || siteInfo.fileRootId
+  const queryFolderId = JSON.parse(event.body).currentFolderId
+  const currentFolderId = queryFolderId || siteInfo.fileRootId
+  console.log('id in query:', queryFolderId, 'restricted top:', siteInfo.fileRootId)
   const parentNodes = await getParentNodes(currentFolderId, siteInfo.fileRootId)
   console.log('query files in folder:', currentFolderId, parentNodes)
   const selfNode = parentNodes[parentNodes.length - 1]
@@ -41,23 +43,32 @@ async function getSiteInfoFromOrigin(event) {
 
 async function getParentNodes(sourceId, topRoot) {
   const nodes = []
-  const selfResp = await uniCloud.database().collection('opendb-netdisk-files').doc(sourceId).get()
-  const selfNode = selfResp.data[0]
+  const sourceResp = await uniCloud.database().collection('opendb-netdisk-files').doc(sourceId).get()
+  const sourceNode = sourceResp.data[0]
   nodes.push({
-    name: selfNode.name,
-    id: selfNode._id,
-    isFolder: selfNode.isFolder
+    name: sourceNode.name,
+    id: sourceNode._id,
+    isFolder: sourceNode.isFolder
   })
-  let parentId = selfNode.parent
-  while (parentId && parentId !== topRoot) {
-    const nodeResp = await uniCloud.database().collection('opendb-netdisk-files').doc(parentId).get()
-    const node = nodeResp.data[0]
-    parentId = node.parent
-    nodes.splice(0, 0, {
-      name: node.name,
-      id: node._id,
-      isFolder: node.isFolder
-    })
+  let parentId = sourceNode.parent
+  while (parentId) {
+    const parentResp = await uniCloud.database().collection('opendb-netdisk-files').doc(parentId).get()
+    const parentNode = parentResp.data[0]
+    if (parentNode.parent !== topRoot) {
+      nodes.splice(0, 0, {
+        name: parentNode.name,
+        id: parentNode._id,
+        isFolder: parentNode.isFolder
+      })
+      parentId = parentNode.parent
+    } else {
+      nodes.splice(0, 0, {
+        name: '',
+        id: parentNode._id,
+        isFolder: parentNode.isFolder
+      })
+      parentId = ''
+    } 
   }
   return nodes
 }
