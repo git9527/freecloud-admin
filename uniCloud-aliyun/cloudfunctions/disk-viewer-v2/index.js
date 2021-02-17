@@ -22,10 +22,9 @@ exports.main = async (event, context) => {
       message: '非法请求-2'
     } 
   }
-  const selfNode = parentNodes[parentNodes.length - 1]
-  console.log('self node is:', selfNode)
+  console.log('self node is:', currentFolderId)
   const whereClause = {
-    parent: selfNode.id
+    parent: currentFolderId
   }
   const resp = await uniCloud.database().collection('opendb-netdisk-files').where(whereClause).orderBy("isFolder", "desc").orderBy("createOn","desc").get()
   //返回数据给客户端
