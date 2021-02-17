@@ -46,28 +46,26 @@ async function getParentNodes(sourceId, topRoot) {
   const sourceResp = await uniCloud.database().collection('opendb-netdisk-files').doc(sourceId).get()
   const sourceNode = sourceResp.data[0]
   nodes.push({
-    name: sourceNode.name,
+    name: sourceId === topRoot ? '' : sourceNode.name,
     id: sourceNode._id,
     isFolder: sourceNode.isFolder
   })
+  if (sourceId === topRoot) {
+    return nodes
+  }
   let parentId = sourceNode.parent
   while (parentId) {
     const parentResp = await uniCloud.database().collection('opendb-netdisk-files').doc(parentId).get()
     const parentNode = parentResp.data[0]
-    if (parentNode._id !== topRoot) {
-      nodes.splice(0, 0, {
-        name: parentNode.name,
-        id: parentNode._id,
-        isFolder: parentNode.isFolder
-      })
-      parentId = parentNode.parent
-    } else {
-      nodes.splice(0, 0, {
-        name: '',
-        id: parentNode._id,
-        isFolder: parentNode.isFolder
-      })
+    nodes.splice(0, 0, {
+      name: parentNode._id === topRoot ? '' : parentNode.name,
+      id: parentNode._id,
+      isFolder: parentNode.isFolder
+    })
+    if (parentNode._id === topRoot) {
       break
+    } else {
+      parentId = parentNode.parent
     } 
   }
   return nodes
