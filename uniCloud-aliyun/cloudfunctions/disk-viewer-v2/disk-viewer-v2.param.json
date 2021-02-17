@@ -2,7 +2,7 @@
 // 配置教程参考：https://uniapp.dcloud.net.cn/uniCloud/quickstart?id=runparam
 {
   "headers": {
-    "origin": "http://localhost:20000"
+    "origin": "http://localhost:20001"
   },
   "body": "{\"currentFolderId\": \"5fe4639d974b690001877cfc\"}"
 }
