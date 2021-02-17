@@ -4,7 +4,7 @@
         <button @click="showCreateFolder" class="uni-button" type="primary" plain>新增文件夹</button>
         <view ref="folderInput" class="input"></view>
         <button @click="uploadFile" class="uni-button" type="primary">上传文件(可多选)</button>
-        <button @click="uploadFolder" class="uni-button" type="primary">上传整个文件夹</button>
+        <button v-if="isInputDirSupported" @click="uploadFolder" class="uni-button" type="primary">上传整个文件夹</button>
         <uni-popup ref="folderPopup" type="dialog">
           <uni-popup-dialog mode="input" title="新增文件夹" placeholder="请输入文件夹名称" @confirm="confirmFolderCreation"></uni-popup-dialog>
         </uni-popup>
@@ -631,6 +631,15 @@ export default {
           showCancel: false
         })
       })
+    },
+    isInputDirSupported () {
+      const tmpInput = document.createElement('input')
+      if ('webkitdirectory' in tmpInput ||
+          'mozdirectory' in tmpInput ||
+          'odirectory' in tmpInput ||
+          'msdirectory' in tmpInput ||
+          'directory' in tmpInput) return true
+      return false
     }
   }
 }
