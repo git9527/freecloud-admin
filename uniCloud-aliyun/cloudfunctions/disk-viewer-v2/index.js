@@ -5,7 +5,7 @@ exports.main = async (event, context) => {
   if (siteInfos.length === 0) {
     return {
       code: -1,
-      message: '非法请求'
+      message: '非法请求-1'
     }
   }
   const siteInfo = siteInfos[0]
@@ -16,6 +16,12 @@ exports.main = async (event, context) => {
   console.log('id in query:', queryFolderId, 'restricted top:', siteInfo.fileRootId)
   const parentNodes = await getParentNodes(currentFolderId, siteInfo.fileRootId)
   console.log('query files in folder:', currentFolderId, parentNodes)
+  if (parentNodes.length === 0) {
+    return {
+      code: -2,
+      message: '非法请求-2'
+    } 
+  }
   const selfNode = parentNodes[parentNodes.length - 1]
   console.log('self node is:', selfNode)
   const whereClause = {
@@ -45,9 +51,12 @@ async function getParentNodes(sourceId, topRoot) {
   const nodes = []
   const sourceResp = await uniCloud.database().collection('opendb-netdisk-files').doc(sourceId).get()
   const sourceNode = sourceResp.data[0]
+  if (!sourceNode) {
+    return nodes
+  }
   nodes.push({
     name: sourceId === topRoot ? '' : sourceNode.name,
-    id: sourceNode._id,
+    id: sourceId === topRoot ? '' : sourceNode._id,
     isFolder: sourceNode.isFolder
   })
   if (sourceId === topRoot) {
@@ -59,7 +68,7 @@ async function getParentNodes(sourceId, topRoot) {
     const parentNode = parentResp.data[0]
     nodes.splice(0, 0, {
       name: parentNode._id === topRoot ? '' : parentNode.name,
-      id: parentNode._id,
+      id: parentNode._id === topRoot ? '' : parentNode._id,
       isFolder: parentNode.isFolder
     })
     if (parentNode._id === topRoot) {
