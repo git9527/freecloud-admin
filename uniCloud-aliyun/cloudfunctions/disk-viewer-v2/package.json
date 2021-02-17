@@ -1,0 +1,10 @@
+{
+"name":"disk-viewer-v2",
+"main":"index.js",
+"version":"1.0.0",
+"description":"",
+"cloudfunction-config":{
+	"memorySize" : 1024,
+	"path" : "/http/netdisk/filesV2",
+	"timeout" : 20
+}}
