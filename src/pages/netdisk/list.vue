@@ -2,8 +2,9 @@
     <view>
       <view class="uni-header">
         <button @click="showCreateFolder" class="uni-button" type="primary" plain>新增文件夹</button>
-        <view ref="input" class="input"></view>
-        <button @click="uploadFile" class="uni-button" type="primary">上传文件</button>
+        <view ref="folderInput" class="input"></view>
+        <button @click="uploadFile" class="uni-button" type="primary">上传文件(可多选)</button>
+        <button v-if="isInputDirSupported" @click="uploadFolder" class="uni-button" type="primary">上传整个文件夹</button>
         <uni-popup ref="folderPopup" type="dialog">
           <uni-popup-dialog mode="input" title="新增文件夹" placeholder="请输入文件夹名称" @confirm="confirmFolderCreation"></uni-popup-dialog>
         </uni-popup>
@@ -135,7 +136,11 @@ const readUploadedFileAsUrl = (inputFile) => {
     temporaryFileReader.onload = () => {
       resolve(temporaryFileReader.result)
     }
-    temporaryFileReader.readAsDataURL(inputFile)
+    try {
+      temporaryFileReader.readAsDataURL(inputFile)
+    } catch (e) {
+      console.error('error parse file:', inputFile, e)
+    }
   })
 }
 
@@ -199,15 +204,26 @@ export default {
     }
   },
   mounted () {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.style.display = 'none'
-    input.id = 'file'
-    input.multiple = true
-    input.onchange = (event) => {
-      this.upload(event.target.files)
+    const folderInput = document.createElement('input')
+    folderInput.type = 'file'
+    folderInput.style.display = 'none'
+    folderInput.id = 'folderInput'
+    folderInput.multiple = true
+    folderInput.webkitdirectory = true
+    folderInput.onchange = (event) => {
+      const files = event.target.files
+      const filteredFiles = []
+      for (let i = 0; i < files.length; i++) {
+        const file = files.item(i)
+        if (file.name.startsWith('.')) {
+          console.warn('exclude hidden file:', file)
+        } else {
+          filteredFiles.push(file)
+        }
+      }
+      this.upload(filteredFiles)
     }
-    this.$refs.input.$el.appendChild(input)
+    this.$refs.folderInput.$el.appendChild(folderInput)
     if (this.pathStack.length === 0 && this.userInfo.site) {
       this.initRootPath()
     }
@@ -357,7 +373,9 @@ export default {
     },
     saveFileInfo (file) {
       const fileObj = Object.assign({}, file)
-      fileObj.parent = this.lastPath.id
+      if (!fileObj.parent) {
+        fileObj.parent = this.lastPath.id
+      }
       fileObj.createBy = this.userInfo.username
       return this.fileCollection.add(fileObj).catch(err => {
         uni.showModal({
@@ -365,7 +383,9 @@ export default {
           showCancel: false
         })
       }).finally(() => {
-        this.loadData()
+        if (!file.parent) {
+          this.loadData()
+        }
       })
     },
     loadData (clear = true) {
@@ -379,7 +399,15 @@ export default {
       })
     },
     uploadFile () {
-      return document.getElementById('file').click()
+      uni.chooseFile({
+        count: 100,
+        success: files => {
+          this.upload(files.tempFiles)
+        }
+      })
+    },
+    uploadFolder () {
+      document.getElementById('folderInput').click()
     },
     async upload (files) {
       console.log('select files:', files)
@@ -392,26 +420,69 @@ export default {
           return
         }
       }
-      uni.showLoading({
-        title: files.length + '个文件上传中'
-      })
-      const uploadTaks = []
-      for (const file of files) {
-        const filePath = await readUploadedFileAsUrl(file)
-        uploadTaks.push(this.uploadApi(filePath, file))
+      for (const i in files) {
+        const file = files[i]
+        if (!file.path) {
+          const filePath = await readUploadedFileAsUrl(file)
+          file.path = filePath
+        } else {
+          // for file coming from uni.chooseFile, it already has path
+          console.debug('path already exist for file', file.name)
+        }
+        await this.uploadApi(file, i, files.length)
       }
-      console.log('submit tasks:', uploadTaks)
-      Promise.allSettled(uploadTaks).then(resp => {
-        uni.hideLoading()
-        uni.showToast({
-          title: files.length + '个文件上传成功'
-        })
+      uni.showToast({
+        title: files.length + '个文件上传成功'
       })
+      document.getElementById('folderInput').value = null
     },
-    async uploadApi (filePath, fileInfo) {
+    async getParentIdFromRativePath (currentPathId, relativePath) {
+      if (!relativePath.includes('/')) {
+        return new Promise(resolve => {
+          resolve(currentPathId)
+        })
+      } else {
+        const firstLevel = relativePath.substring(0, relativePath.indexOf('/'))
+        const afterLevel = relativePath.substring(relativePath.indexOf('/') + 1)
+        const queryResp = await this.fileCollection.where({
+          parent: currentPathId,
+          isFolder: true,
+          name: firstLevel
+        }).get()
+        const respBody = queryResp.result
+        if (respBody.affectedDocs === 0) {
+          const addResp = await this.saveFileInfo({
+            name: firstLevel,
+            parent: currentPathId,
+            isFolder: true
+          })
+          const addedId = addResp.result.id
+          console.log('create folder for first relative path:', firstLevel)
+          const parentId = await this.getParentIdFromRativePath(addedId, afterLevel)
+          return parentId
+        } else {
+          const existId = respBody.data[0]._id
+          console.log('folder exist for relative path:', firstLevel)
+          const parentId = await this.getParentIdFromRativePath(existId, afterLevel)
+          return parentId
+        }
+      }
+    },
+    async uploadApi (fileInfo, i, total) {
+      uni.showModal({
+        title: '正在上传文件',
+        content: '第' + (Number.parseInt(i) + 1) + '/' + total + '个\n' + fileInfo.name,
+        showCancel: false
+      })
+      let parentId = ''
+      const relativePath = fileInfo.webkitRelativePath
+      if (relativePath) {
+        parentId = await this.getParentIdFromRativePath(this.lastPath.id, relativePath)
+        console.log('get parent id:', parentId, 'for file:', fileInfo.name)
+      }
       const uploadResp = await uniCloud.uploadFile({
         cloudPath: fileInfo.name,
-        filePath: filePath
+        filePath: fileInfo.path
       })
       if (uploadResp.success) {
         const fileObj = {
@@ -420,6 +491,9 @@ export default {
           link: uploadResp.fileID,
           isFolder: false,
           fileType: checkFileType(fileInfo.name)
+        }
+        if (parentId) {
+          fileObj.parent = parentId
         }
         this.saveActionLog('upload-file', fileObj)
         return this.saveFileInfo(fileObj)
@@ -557,6 +631,15 @@ export default {
           showCancel: false
         })
       })
+    },
+    isInputDirSupported () {
+      const tmpInput = document.createElement('input')
+      if ('webkitdirectory' in tmpInput ||
+          'mozdirectory' in tmpInput ||
+          'odirectory' in tmpInput ||
+          'msdirectory' in tmpInput ||
+          'directory' in tmpInput) return true
+      return false
     }
   }
 }

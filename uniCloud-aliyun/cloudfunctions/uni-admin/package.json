@@ -12,8 +12,9 @@
   "dependencies": {
     "uni-cloud-router": "file:../common/uni-cloud-router",
     "uni-id": "file:../common/uni-id"
+  },
+  "cloudfunction-config": {
+    "memorySize": 2048,
+    "timeout": 10
   }
-,"cloudfunction-config":{
-	"memorySize" : 2048,
-	"timeout" : 10
-}}
+}
