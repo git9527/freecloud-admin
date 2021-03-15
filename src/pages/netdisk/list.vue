@@ -431,8 +431,10 @@ export default {
         }
         await this.uploadApi(file, i, files.length)
       }
-      uni.showToast({
-        title: files.length + '个文件上传成功'
+      uni.showModal({
+        title: '提示',
+        content: files.length + '个文件上传成功',
+        showCancel: false
       })
       document.getElementById('folderInput').value = null
     },
