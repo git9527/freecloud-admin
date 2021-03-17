@@ -26,7 +26,7 @@ exports.main = async (event, context) => {
   const whereClause = {
     parent: currentFolderId
   }
-  const resp = await uniCloud.database().collection('opendb-netdisk-files').where(whereClause).orderBy("isFolder", "desc").orderBy("createOn","desc").get()
+  const resp = await uniCloud.database().collection('opendb-netdisk-files').where(whereClause).orderBy("isFolder", "desc").orderBy("name","asc").get()
   //返回数据给客户端
   return {
     code: 0,
