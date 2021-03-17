@@ -119,7 +119,7 @@ import {
 const db = uniCloud.database()
 // 表查询配置
 const fileCollectionName = 'opendb-netdisk-files'
-const dbOrderBy = 'isFolder desc, createOn desc'
+const dbOrderBy = 'isFolder desc, name asc'
 // 分页配置
 const pageSize = 20
 const pageCurrent = 1
