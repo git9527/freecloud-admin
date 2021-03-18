@@ -436,6 +436,7 @@ export default {
         content: files.length + '个文件上传成功',
         showCancel: false
       })
+      this.loadData(false)
       document.getElementById('folderInput').value = null
     },
     async getParentIdFromRativePath (currentPathId, relativePath) {
