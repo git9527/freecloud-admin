@@ -11,9 +11,11 @@ exports.main = async (event, context) => {
   const siteInfo = siteInfos[0]
   delete siteInfo.siteOrigin
   delete siteInfo._id
-  const queryFolderId = JSON.parse(event.body).currentFolderId
-  const currentFolderId = queryFolderId || siteInfo.fileRootId
-  console.log('id in query:', queryFolderId, 'restricted top:', siteInfo.fileRootId)
+  const originQueryId = JSON.parse(event.body).id
+  const queryId =  originQueryId || siteInfo.fileRootId
+  const queryFileInfo = await getInfoById(queryId)
+  const currentFolderId = queryFileInfo.isFolder ? queryId : queryFileInfo.parent
+  console.log('id in query:', originQueryId, 'restricted top:', siteInfo.fileRootId)
   const parentNodes = await getParentNodes(currentFolderId, siteInfo.fileRootId)
   console.log('query files in folder:', currentFolderId, parentNodes)
   if (parentNodes.length === 0) {
@@ -33,7 +35,8 @@ exports.main = async (event, context) => {
     data: {
       paths: parentNodes,
       files: resp.data,
-      siteInfo: siteInfo
+      siteInfo: siteInfo,
+      targetFile: originQueryId
     }
   }
 };
@@ -77,6 +80,11 @@ async function getParentNodes(sourceId, topRoot) {
     } 
   }
   return nodes
+}
+
+async function getInfoById(sourceId) {
+  const sourceResp = await uniCloud.database().collection('opendb-netdisk-files').doc(sourceId).get()
+  return sourceResp.data[0]
 }
 
 

@@ -4,5 +4,5 @@
   "headers": {
     "origin": "http://localhost:20001"
   },
-  "body": "{\"currentFolderId\": \"5fe4639d974b690001877cfc\"}"
+  "body": "{\"id\": \"5fe463ba23976b0001dd115d\"}"
 }

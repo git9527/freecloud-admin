@@ -33,7 +33,7 @@
                         <uni-th width="100" align="center">上传人</uni-th>
                         <uni-th width="100" align="center">文件大小</uni-th>
                         <uni-th width="170" align="center">添加时间</uni-th>
-                        <uni-th width="80" align="center">操作</uni-th>
+                        <uni-th width="160" align="center">操作</uni-th>
                     </uni-tr>
                     <uni-tr v-for="(item,index) in data" :key="index">
                       <uni-td align="left">
@@ -58,7 +58,8 @@
                       </uni-td>
                       <uni-td align="center">
                           <view class="uni-group">
-                              <button size="mini" @click="confirmDelete(item)" class="uni-button" type="warn">删除</button>
+                            <button size="mini" @click="copyLink(item)" class="uni-button" type="primary">复制链接</button>
+                            <button size="mini" @click="confirmDelete(item)" class="uni-button" type="warn">删除</button>
                           </view>
                       </uni-td>
                     </uni-tr>
@@ -112,6 +113,8 @@ import { formatSize, checkFileType } from '@/js_sdk/netdisk/index.js'
 import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog.vue'
 import APlayer from 'vue-aplayer'
 import Tree from './component/tree.vue'
+
+import h5Copy from '@/js_sdk/copy/h5_copy.js'
 
 import {
   mapState
@@ -200,7 +203,8 @@ export default {
       showAudio: false,
       treeNode: [],
       moveTargetFolder: '',
-      isSubmitting: false
+      isSubmitting: false,
+      userSiteHost: ''
     }
   },
   mounted () {
@@ -274,7 +278,9 @@ export default {
     initRootPath () {
       const id = this.userInfo.site
       db.collection('opendb-netdisk-sites').doc(id).get().then(resp => {
-        const id = resp.result.data[0].fileRootId
+        const file = resp.result.data[0]
+        this.userSiteHost = file.siteOrigin.split(',')[0]
+        const id = file.fileRootId
         this.pathStack.push({
           id: id,
           name: ''
@@ -643,6 +649,13 @@ export default {
           'msdirectory' in tmpInput ||
           'directory' in tmpInput) return true
       return false
+    },
+    copyLink (file) {
+      if (h5Copy(this.userSiteHost + '?id=' + file._id)) {
+        uni.showToast({
+          title: '链接已复制进粘贴板'
+        })
+      }
     }
   }
 }
