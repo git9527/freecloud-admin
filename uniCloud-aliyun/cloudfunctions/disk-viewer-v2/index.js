@@ -36,7 +36,7 @@ exports.main = async (event, context) => {
       paths: parentNodes,
       files: resp.data,
       siteInfo: siteInfo,
-      targetIsFile: !queryFileInfo.isFolder
+      targetFile: queryFileInfo
     }
   }
 };
